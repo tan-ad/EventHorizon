@@ -71,7 +71,7 @@ def index():
         document = fetch_html(url)
         events = get_events(document)
     except:
-        return render_template('index.html', events=[])
+        return render_template('index.html', events="404")
     # print(json.dumps(events, indent=4))
     return render_template('index.html', events=events)
 
