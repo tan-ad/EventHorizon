@@ -99,9 +99,11 @@
                         <div class="info-main">{{ event['date']['when'] }}</div>
                         <div class="info-sub">{{ event['date']['relative'] }}</div>
                     </div>
+                    {% if event['date']['calendar']|length > 0 %}
                     <div class="calendar-button">
                         <a href="{{ event['date']['calendar'] }}" class="calendar-link" target="_blank">Add to Google Calendar</a>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="section-container">
                     <div class="dialog-icon">

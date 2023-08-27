@@ -1,4 +1,5 @@
 import base64
+import traceback
 from urllib.parse import quote
 from datetime import datetime, timedelta
 from dateparser import parse
@@ -22,8 +23,18 @@ def uule(city: str) -> str:
 def google_calendar(event_title, event_time, event_details, event_location):
     try:
         event_time = event_time.replace(".", "").replace('am', 'AM').replace('pm', 'PM')
-        start_time, end_time = event_time.split("–")
-        start_time, end_time = parse(start_time), parse(end_time)
+        event_time = event_time.split("–")
+        if len(event_time) == 1:
+            start_time = parse(event_time[0])
+            end_time = start_time
+        else:
+            start_time, end_time = event_time
+            start_time, end_time = start_time.strip(), end_time.strip()
+            if (end_time[-2:] == 'AM' or end_time[-2:] == 'PM') and (start_time[-2:] != 'AM' and start_time[-2:] != 'PM'):
+                start_time += end_time[-2:]
+
+            start_time, end_time = parse(start_time), parse(end_time)
+        
         if end_time < start_time:
             end_time = end_time.replace(year=start_time.year, month=start_time.month, day=start_time.day)
         # print(start_time, end_time)
@@ -42,7 +53,8 @@ def google_calendar(event_title, event_time, event_details, event_location):
         return google_calendar_link
 
     except Exception as e:
-        # print(e)
+        print(e)
+        traceback.print_exc()
         return ""
 
 
