@@ -77,7 +77,7 @@ def get_events(document):
             data_info, data_panel, data_details, data_tickets, data_venue, data_google = data_divs
         else:
             data_info, data_panel, data_details, data_tickets, data_google = data_divs
-        
+
         data_info_date, data_info_name = data_info.find_all('div', recursive=False)
         data_info_day, data_info_month = data_info_date.find_all('div', recursive=False)
         # print(f"{data_info_day.text} {data_info_month.text} {data_info_name.text}")
@@ -118,7 +118,7 @@ def get_events(document):
         for image in images:
             if image.has_attr('data-src'):
                 icons.append(image.get('data-src'))
-        
+
         if has_venue:
             data_venue_title, data_venue_name, data_venue_rating, data_venue_search = data_venue.find_all('div', recursive=False)
             data_venue_rating_stars = float(data_venue_rating.find('span').text)
@@ -130,17 +130,22 @@ def get_events(document):
         else:
             venue_data = {"name": "", "stars": "", "reviews": "", "link": ""}
 
+        try:
+            thumbnail_link = thumbnails[count]
+        except:
+            thumbnail_link = "https://www.google.com/maps/vt/data=Bc8Imf2Qhzd-8Puq3FbBPmFjQ8tBbZ0YV8hXAzP7qFLvfE4Juw3ldILam4RBhn9TH_e9iyM?scale=4"
+
         event_result = {
                             "title": data_info_name.text,
                             "date": {
                                 "start_date": f"{main_date_day.text} {main_date_month.text}",
                                 "when": data_details_time_date.text,
                                 "relative": data_details_time_relative.text,
-                                "calendar": google_calendar(data_info_name.text, 
+                                "calendar": google_calendar(data_info_name.text,
                                                             data_details_time_date.text,
                                                             data_details_description_content,
                                                             main_event_info_address.text + ', ' + main_event_info_city.text)
-                            }, 
+                            },
                             "location": {
                                 "address": main_event_info_address.text,
                                 "city": main_event_info_city.text,
@@ -156,7 +161,7 @@ def get_events(document):
                                 } for i in range(len(links))
                             ],
                             "venue": venue_data,
-                            "thumbnail": thumbnails[count],
+                            "thumbnail": thumbnail_link,
                         }
         event_results.append(event_result)
 

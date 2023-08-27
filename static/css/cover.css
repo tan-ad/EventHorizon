@@ -156,7 +156,7 @@
 
 /* Style the cover section */
 .cover {
-  padding: 50px 0;
+  padding: 30px 0 30px 0;
   background-color: var(--c1);
 }
 
@@ -184,7 +184,7 @@
 .main-image img {
   display: block;
   width: 40%;
-  margin: 0 10% 0 auto;
+  margin: 0 10% 10px auto;
 }
 
 .search-container {
