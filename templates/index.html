@@ -1,0 +1,207 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ignite Hacks Project</title>
+
+    <link rel="icon" href="../static/images/favicon-coloured.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="../static/js/script.js"></script>
+
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="../static/css/cover.css">
+</head>
+
+<body>
+    <!-- Sticky header -->
+    <header class="header-outer">
+        <div class="header-inner responsive-wrapper">
+            <div class="header-logo">
+                <img src="../static/images/EventHorizon_transparent.png" />
+            </div>
+            <nav class="header-navigation">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <button>Menu</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="cover">
+        <div class="main-container">
+            <div class="main-title">Discover and attend local events</div>
+            <div class="main-image">
+                <img src="https://cdn.discordapp.com/attachments/685187276350816312/1145165132733882418/event.png">
+            </div>
+        </div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" class="search-input" placeholder="Find events" id="search-input">
+        </div>
+        <div class="search-additional">
+            <div class="location-search">
+                <i class="fa-solid fa-location-crosshairs search-icon"></i>
+                <input type="text" class="location-input" placeholder="Enter a location" id="location-input">
+            </div>
+
+            <div class="dropdown" id="dropdown-date">
+                <div class="dropdown-toggle" onclick="toggleDropdown('dropdown-date')"><i
+                        class="fa-regular fa-calendar dropdown-icon"></i>Date</div>
+                <div class="dropdown-content">
+                    <label><input type="checkbox"> Today</label>
+                    <label><input type="checkbox"> Tomorrow</label>
+                    <label><input type="checkbox"> This Week</label>
+                    <label><input type="checkbox"> This Weekend</label>
+                    <label><input type="checkbox"> Next Week</label>
+                    <label><input type="checkbox"> This Month</label>
+                    <label><input type="checkbox"> Next Month</label>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <div class="dropdown-toggle" onclick="toggleSingleDropdown()">
+                    <span id="selected-option"><i class="fa-solid fa-filter dropdown-icon"></i>Filter</span>
+                    <i class="arrow-down"></i>
+                </div>
+                <ul class="dropdown-single" id="dropdown-single">
+                    <li onclick="selectOption(0)">All Events</li>
+                    <li onclick="selectOption(1)">Concerts</li>
+                    <li onclick="selectOption(2)">Festivals</li>
+                    <li onclick="selectOption(3)">Free Events</li>
+                    <li onclick="selectOption(4)">Shows</li>
+                    <li onclick="selectOption(5)">Nightlife</li>
+                </ul>
+            </div>
+            <button class="search-button" id="search-button">
+                Search!
+            </button>
+        </div>
+    </section>
+
+    <div class="overlay" id="overlay"></div>
+    {% for event in events %}
+    <div>
+        <div class="dialog" id="dialog{{ loop.index }}">
+            <span class="dialog__close">&#x2715;</span>
+            <h2 class="dialog__title">{{ event['title'] }}</h2>
+            <div class="dialog__content">
+                <div class="description">{{ event['description'] }}</div>
+                <div class="section-container">
+                    <div class="dialog-icon">
+                        <i class="fa-regular fa-calendar fa-2xl"></i>
+                    </div>
+                    <div class="info">
+                        <div class="info-main">{{ event['date']['when'] }}</div>
+                        <div class="info-sub">{{ event['date']['relative'] }}</div>
+                    </div>
+                    <div class="calendar-button">
+                        <a href="{{ event['date']['calendar'] }}" class="calendar-link" target="_blank">Add to Google Calendar</a>
+                    </div>
+                </div>
+                <div class="section-container">
+                    <div class="dialog-icon">
+                        <i class="fas fa-location-dot fa-2xl"></i>
+                    </div>
+                    <div class="info">
+                        <a href="{{ event['location']['maps'] }}" target="_blank">
+                            <div class="info-main">{{ event['location']['address'] }}</div>
+                            <div class="info-sub">{{ event['location']['city'] }}</div>
+                        </a>
+                    </div>
+                    {% if event['venue']['name']|length > 0 %}
+                    <div class="rating">
+                        {% set stars = event['venue']['stars'] %}
+                        <div class="stars">{{ stars }}</div>
+                        {% for i in range(5) %}
+                        {% if i < (stars+0.25)|int %} <div class="star-icon">
+                            <i class="fas fa-star"></i>
+                    </div>
+                    {% elif i < (stars+0.75)|int %} <div class="star-icon">
+                        <i class="fas fa-star-half-alt"></i>
+                </div>
+                {% else %}
+                <div class="star-icon">
+                    <i class="far fa-star"></i>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="reviews">{{ '{:,}'.format(event['venue']['reviews']) }} reviews</div>
+            </div>
+            {% endif %}
+        </div>
+        {% if event['ticket_info']|length > 0 %}
+        <div class="section-header">
+            <div class="dialog-icon">
+                <i class="fa-solid fa-ticket fa-2xl"></i>
+            </div>
+            <div class="tickets-title">
+                Tickets and Information
+            </div>
+        </div>
+        {% for ticket in event['ticket_info'] %}
+        <div class="section-container">
+            <div class="ticket-icon">
+                <img src="{{ ticket['icon'] }}"
+                    onerror="this.src='https://www.gstatic.com/images/icons/material/system/2x/public_grey600_48dp.png';">
+            </div>
+            <div class="info">
+                <a href="{{ ticket['link'] }}" target="_blank">
+                    <div class="info-main">{{ ticket['source'] }}</div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div style="padding: 10px;"></div>
+    {% if event['link']|length > 0 %}
+    <a class="dialog__action" href="{{ event['link'] }}" target="_blank">Read more &#8594;</a>
+    {% endif %}
+    </div>
+    </div>
+    {% endfor %}
+    <div class="card-grid">
+        {% for event in events %}
+        <div class="card" style="background-image: url('{{ event['thumbnail'] }}')">
+            <div class="panel">
+                <div class="panel-name" title="{{ event['title'] }}">
+                    {{ event['title'] }}
+                </div>
+                <hr>
+                <div class="panel-date">
+                    <i class="fa-regular fa-calendar"></i>
+                    {{ event['date']['start_date'] }}
+                </div>
+                <div class="panel-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ event['location']['city'] }}
+                </div>
+                <div class="panel-description">
+                    {{ event['description'] }}
+                </div>
+                <div class="spacing"></div>
+                <button class="learn-more dialog__trigger" data-dialog="dialog{{ loop.index }}">
+                    <span class="circle" aria-hidden="true">
+                        <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">More Info</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if events|length == 0 %}
+        <script src="../static/js/error_404.js"></script>
+        <link rel="stylesheet" href="../static/css/error_404.css">
+        <div class="error-title">
+            No Results Found!
+        </div>
+        {% include 'error_404.html' %}
+    {% endif %}
+</body>
+
+</html>
