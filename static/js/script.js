@@ -1,3 +1,14 @@
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryValue = urlParams.get('query');
+  const queryElement = document.querySelector('#search-input');
+  queryElement.value = queryValue;
+
+  const locationValue = urlParams.get('location');
+  const locationElement = document.querySelector('#location-input');
+  locationElement.value = locationValue;
+});
+
 function dialog() {
 
   // Declare variables
@@ -107,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedDates = Array.from(selectedDateCheckboxes, checkbox => checkbox.parentElement.textContent.trim());
     var filterValue = selectedOption.textContent;
     if (filterValue != "Filter") {
-      searchTerm = filterValue + " " + searchTerm;
+      searchTerm = searchTerm + " " + filterValue;
     }
 
     const queryParams = new URLSearchParams({
