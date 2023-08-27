@@ -178,7 +178,7 @@
   font-weight: bold;
   font-size: 56px;
   width: 40%;
-  margin-left: 10%;
+  margin-left: 15%;
 }
 
 .main-image img {
@@ -223,7 +223,7 @@
   border-radius: 1000px;
   padding: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin: 0 20px;
+  margin: 0 20px 0 0;
 }
 
 .location-input {
@@ -237,7 +237,9 @@
 
 .search-additional {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  margin-left: 14%;
+  margin-right: 14%;
 }
 
 .dropdown-icon {
@@ -333,7 +335,7 @@
   color: white;
   cursor: pointer;
   padding: 10px 20px;
-  margin: 0 17px;
+  margin: 0 0 0 17px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,0 +1,4 @@
+beautifulsoup4==4.12.2
+dateparser==1.1.8
+Flask==2.2.5
+Requests==2.31.0
